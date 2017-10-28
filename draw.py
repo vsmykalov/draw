@@ -58,6 +58,9 @@ class Board:
 
 class Draw:
     def init(self, w, h, real_w=None, real_h=None, border=True):
+        self.obj = {}
+        self.board = {}
+
         pygame.font.init()
 
         self.w = w
@@ -79,8 +82,6 @@ class Draw:
         icon = pygame.image.load('pusheen.png')
         pygame.display.set_icon(icon)
 
-        self.obj = {}
-        self.board = {}
 
         self.clock = pygame.time.Clock()
         self._cached_fps = {}
@@ -197,7 +198,8 @@ class Draw:
                     self.real_h = event.h
                     self.screen = pygame.display.set_mode((self.real_w, self.real_h), pygame.RESIZABLE)
                     for b in list(self.board.values()):
-                        b.clear_cache() 
+                        b.clear_cache()
+                    self._cached_fps = {}     
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     scale = min((self.real_w - 2 * _MARGIN) / self.w, (self.real_h - 2 * _MARGIN) / self.h)
@@ -217,6 +219,10 @@ class Draw:
                             r = max(0, min(b.rows - 1, int(r)))
                             c = max(0, min(b.cols - 1, int(c)))
                             b.clicked.append((r, c))
+
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_q:
+                    self.running = 0
+                    
 
             self.draw()
 
